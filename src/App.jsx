@@ -1,5 +1,6 @@
 import { useState, useEffect, Suspense, lazy } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { useAuth } from './lib/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
 import PWAInstallPrompt from './components/PWAInstallPrompt'
 // Lazy loaded routes
@@ -22,6 +23,8 @@ const LoadingScreen = () => (
 );
 
 function App() {
+  const { user } = useAuth();
+  
   return (
     <Router>
       <div className="min-h-screen bg-background text-text-primary transition-colors duration-200">
@@ -45,7 +48,7 @@ function App() {
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
-        <PWAInstallPrompt />
+        {user && <PWAInstallPrompt />}
       </div>
     </Router>
   )
