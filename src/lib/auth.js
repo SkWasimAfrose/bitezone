@@ -1,5 +1,6 @@
 import { 
-  signInWithPopup, 
+  signInWithPopup,
+  signInWithRedirect, 
   GoogleAuthProvider,
   signOut, 
   onAuthStateChanged 
@@ -10,29 +11,20 @@ import { auth, db } from './firebase';
 const googleProvider = new GoogleAuthProvider();
 
 export async function signInWithGoogle() {
-  const result = await signInWithPopup(auth, googleProvider);
-  const user = result.user;
-  
-  // Check if user document already exists
-  const userRef = doc(db, 'users', user.uid);
-  const userSnap = await getDoc(userRef);
-  
-  let role = 'student';
-  if (!userSnap.exists()) {
-    // New user, create document with default role
-    await setDoc(userRef, {
-      email: user.email,
-      displayName: user.displayName,
-      photoURL: null,
-      role: 'student',
-      createdAt: new Date()
-    });
-  } else {
-    // Existing user, preserve their current role
-    role = userSnap.data().role;
+  try {
+    const result = await signInWithPopup(auth, googleProvider);
+    // User creation is now handled robustly in onAuthChange
+    return { user: result.user };
+  } catch (error) {
+    if (error.code === 'auth/popup-blocked' || error.code === 'auth/popup-closed-by-user') {
+      console.warn('Popup blocked or closed by user, falling back to redirect...');
+      // Fallback to redirect which works in all strict browsers/mobile apps
+      await signInWithRedirect(auth, googleProvider);
+      // Execution stops here as the page redirects
+    } else {
+      throw error;
+    }
   }
-  
-  return { user, role };
 }
 
 export async function signOutUser() {
@@ -46,17 +38,28 @@ export function onAuthChange(callback) {
         const docRef = doc(db, 'users', user.uid);
         const docSnap = await Promise.race([
           getDoc(docRef),
-          new Promise((_, reject) => setTimeout(() => reject(new Error('Firestore timeout')), 3000))
+          new Promise((_, reject) => setTimeout(() => reject(new Error('Firestore timeout')), 5000))
         ]);
+        
         let role = 'student'; // default fallback
         
         if (docSnap.exists()) {
           role = docSnap.data().role;
+        } else {
+          // New user (maybe from redirect or popup), create document with default role
+          await setDoc(docRef, {
+            email: user.email,
+            displayName: user.displayName,
+            photoURL: user.photoURL || null,
+            role: 'student',
+            createdAt: new Date()
+          });
+          role = 'student';
         }
         
         callback(user, role);
       } catch (error) {
-        console.error("Error fetching user role:", error);
+        console.error("Error fetching/creating user role:", error);
         callback(user, 'student');
       }
     } else {
