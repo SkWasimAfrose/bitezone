@@ -1,0 +1,54 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() { return request.auth != null; }
+    function me() { return get(/databases/$(database)/documents/users/$(request.auth.uid)).data; }
+    function isSuper() { return signedIn() && me().role == 'superadmin'; }
+    function isRestAdmin(rid) {
+      return signedIn() && me().role == 'restaurant_admin' && me().restaurantId == rid;
+    }
+
+    match /users/{uid} {
+      allow read: if signedIn() && (request.auth.uid == uid || isSuper());
+      allow create: if signedIn() && request.auth.uid == uid
+                    && request.resource.data.role == 'student';
+      allow update: if signedIn() && (isSuper() || (request.auth.uid == uid
+                    && request.resource.data.role == resource.data.role
+                    && request.resource.data.get('restaurantId', null)
+                       == resource.data.get('restaurantId', null)));
+    }
+
+    match /restaurants/{rid} {
+      allow read: if resource.data.status == 'approved' || isSuper() || isRestAdmin(rid);
+      allow create, delete: if isSuper();
+      allow update: if isSuper() || (isRestAdmin(rid)
+        && request.resource.data.diff(resource.data).affectedKeys()
+           .hasOnly(['isOpen','phone','address','description','deliveryWindows','imageUrl','updatedAt']));
+
+      match /menu/{itemId} {
+        allow read: if true;
+        allow write: if isSuper() || isRestAdmin(rid);
+      }
+    }
+
+    match /orders/{oid} {
+      allow read: if signedIn() && (resource.data.customer.uid == request.auth.uid
+                    || isSuper() || isRestAdmin(resource.data.restaurantId));
+      allow create: if signedIn()
+        && request.resource.data.customer.uid == request.auth.uid
+        && request.resource.data.status == 'new'
+        && get(/databases/$(database)/documents/restaurants/$(request.resource.data.restaurantId)).data.isOpen == true
+        && get(/databases/$(database)/documents/restaurants/$(request.resource.data.restaurantId)).data.status == 'approved';
+      allow update: if signedIn() && (
+        isSuper()
+        || (isRestAdmin(resource.data.restaurantId)
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status','updatedAt']))
+        || (resource.data.customer.uid == request.auth.uid
+            && resource.data.status == 'new'
+            && request.resource.data.status == 'cancelled'
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status','updatedAt'])));
+      allow delete: if false;
+    }
+  }
+}
