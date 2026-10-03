@@ -19,7 +19,26 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     let unsubscribeUser = null;
+    let isRedirectResolved = false;
+    let isAuthStateResolved = false;
 
+    const resolveLoading = () => {
+      if (isRedirectResolved && isAuthStateResolved) {
+        setLoading(false);
+      }
+    };
+
+    // 1. Process redirect result first
+    import('./auth').then(({ handleRedirectResult }) => {
+      handleRedirectResult()
+        .catch(err => console.error("Redirect handler error:", err))
+        .finally(() => {
+          isRedirectResolved = true;
+          resolveLoading();
+        });
+    });
+
+    // 2. Setup auth state listener
     const unsubscribeAuth = onAuthChange(async (authUser, authRole) => {
       console.log('Auth state changed:', { authUser, authRole });
       setFirebaseUser(authUser);
@@ -57,17 +76,20 @@ export function AuthProvider({ children }) {
             setRole(null);
             setRestaurantId(null);
           }
-          setLoading(false);
+          isAuthStateResolved = true;
+          resolveLoading();
         }, (error) => {
           console.error("Error listening to user doc:", error);
-          setLoading(false);
+          isAuthStateResolved = true;
+          resolveLoading();
         });
 
       } else {
         setUser(null);
         setRole(null);
         setRestaurantId(null);
-        setLoading(false);
+        isAuthStateResolved = true;
+        resolveLoading();
       }
     });
 

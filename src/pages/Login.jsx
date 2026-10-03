@@ -17,21 +17,14 @@ export default function Login() {
   }
 
   const handleGoogleLogin = async () => {
-    // Calling the popup synchronously at the start of the user action
-    // prevents the browser from blocking it.
     try {
-      const authPromise = signInWithGoogle();
-      
-      // Now it's safe to do React state updates while the popup is opening
       setIsLoading(true);
       setError(null);
-      
-      await authPromise;
-      // On success, AuthContext will update user state and trigger redirect above
+      await signInWithGoogle();
+      // Browser will redirect to Google
     } catch (err) {
       console.error(err);
-      setError("Failed to sign in with Google. Please try again.");
-    } finally {
+      setError("Failed to initialize Google Sign-in.");
       setIsLoading(false);
     }
   };
