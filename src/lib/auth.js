@@ -11,20 +11,9 @@ import { auth, db } from './firebase';
 const googleProvider = new GoogleAuthProvider();
 
 export async function signInWithGoogle() {
-  try {
-    const result = await signInWithPopup(auth, googleProvider);
-    // User creation is now handled robustly in onAuthChange
-    return { user: result.user };
-  } catch (error) {
-    if (error.code === 'auth/popup-blocked' || error.code === 'auth/popup-closed-by-user') {
-      console.warn('Popup blocked or closed by user, falling back to redirect...');
-      // Fallback to redirect which works in all strict browsers/mobile apps
-      await signInWithRedirect(auth, googleProvider);
-      // Execution stops here as the page redirects
-    } else {
-      throw error;
-    }
-  }
+  const result = await signInWithPopup(auth, googleProvider);
+  // User creation is handled robustly in onAuthChange
+  return { user: result.user };
 }
 
 export async function signOutUser() {
