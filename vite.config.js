@@ -11,6 +11,9 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'icon.png'],
+      workbox: {
+        navigateFallbackDenylist: [/^\/__/]
+      },
       manifest: {
         name: 'Bitezone',
         short_name: 'Bitezone',
