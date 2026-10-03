@@ -39,7 +39,7 @@ export default function Login() {
         
         <GlassCard className="p-8 relative z-10 flex flex-col items-center text-center space-y-8 border-white/20">
           <div className="space-y-2">
-            <h1 className="text-4xl font-bold text-text-primary tracking-tight">khanakro</h1>
+            <h1 className="text-4xl font-bold text-text-primary tracking-tight">BiteZone</h1>
             <p className="text-text-secondary text-sm">Sign in to order your food.</p>
           </div>
           
