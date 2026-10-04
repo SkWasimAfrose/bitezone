@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../lib/AuthContext';
 import { signOutUser } from '../lib/auth';
 import { useNavigate } from 'react-router-dom';
-import { User, MapPin, LogOut, MessageCircle, Moon, Camera, Trash, Edit2 } from 'lucide-react';
+import { User, MapPin, LogOut, MessageCircle, Moon, Camera, Trash, Edit2, LayoutDashboard } from 'lucide-react';
 import GlassCard from '../components/ui/GlassCard';
 import GlassButton from '../components/ui/GlassButton';
 import BottomTabBar from '../components/ui/BottomTabBar';
@@ -132,6 +132,17 @@ export default function Profile() {
             <p className="text-sm text-text-secondary truncate">{user?.email || 'No email'}</p>
           </div>
         </GlassCard>
+
+        {/* Admin Dashboard Access */}
+        {(user?.role === 'superadmin' || user?.role === 'restaurant_admin') && (
+          <GlassButton 
+            className="w-full py-4 text-white font-bold bg-gradient-to-r from-accent to-accent/80 border-none shadow-lg shadow-accent/20 gap-2"
+            onClick={() => navigate(user?.role === 'superadmin' ? '/super-admin' : '/admin')}
+          >
+            <LayoutDashboard className="w-5 h-5" />
+            {user?.role === 'superadmin' ? 'Access Super Admin Panel' : 'View My Restaurant Dashboard'}
+          </GlassButton>
+        )}
 
         {/* Saved Address */}
         <div className="space-y-3">
