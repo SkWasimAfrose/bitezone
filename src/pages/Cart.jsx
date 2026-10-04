@@ -125,8 +125,8 @@ export default function Cart() {
   }
 
   return (
-    <div className="pb-40 px-4 max-w-lg mx-auto animate-in fade-in duration-300 min-h-screen bg-background">
-      <header className="sticky top-0 z-30 pt-4 pb-4 bg-background/80 backdrop-blur-md flex items-center gap-4">
+    <div className="pb-40 px-4 max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto animate-in fade-in duration-300 min-h-screen bg-background">
+      <header className="sticky top-0 md:top-[72px] z-30 pt-4 pb-4 bg-background/80 backdrop-blur-md flex items-center gap-4">
         <button onClick={() => navigate(-1)} className="p-2 rounded-full bg-surface hover:bg-surface-hover transition-colors">
           <ArrowLeft className="w-5 h-5 text-text-primary" />
         </button>
@@ -163,7 +163,7 @@ export default function Cart() {
               >
                 <GlassCard className="p-4 flex items-center justify-between">
                   <div className="flex-1 min-w-0 pr-4">
-                    <h3 className="font-bold text-text-primary truncate">{item.name}</h3>
+                    <h3 className="font-bold text-text-primary truncate" title={item.name}>{item.name}</h3>
                     <p className="text-accent font-semibold mt-1">₹{item.price}</p>
                   </div>
                   

@@ -12,7 +12,7 @@ export default function BottomTabBar({ activeTab = 'home', onTabChange }) {
   ];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 w-full max-w-lg mx-auto bg-surface/95 backdrop-blur-xl border-t border-text-secondary/10 shadow-[0_-8px_30px_rgba(0,0,0,0.04)] px-8 py-3 flex justify-between items-center z-50">
+    <div className="md:hidden fixed bottom-0 left-0 right-0 w-full max-w-lg md:max-w-3xl lg:max-w-5xl xl:max-w-7xl mx-auto bg-surface/95 backdrop-blur-xl border-t border-text-secondary/10 shadow-[0_-8px_30px_rgba(0,0,0,0.04)] px-8 py-3 flex justify-between items-center z-50 transition-all duration-500">
       {tabs.map((tab) => {
         const Icon = tab.icon;
         const isActive = activeTab === tab.id;

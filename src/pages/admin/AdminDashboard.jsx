@@ -236,15 +236,15 @@ export default function AdminDashboard({ superAdminRestaurantId, onBack }) {
             {filteredOrders.map(order => (
               <motion.div key={order.id} layout initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95 }}>
                 <GlassCard className="p-5 border-l-4" style={{ borderLeftColor: order.status === 'new' ? '#F59E0B' : 'transparent' }}>
-                  <div className="flex justify-between items-start mb-3">
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <h3 className="font-bold font-serif text-text-primary text-lg">{order.customer.name}</h3>
-                        <span className="text-xs font-mono bg-surface px-2 py-0.5 rounded text-text-secondary">
+                  <div className="flex justify-between items-start mb-3 gap-3">
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <h3 className="font-bold font-serif text-text-primary text-lg truncate" title={order.customer.name}>{order.customer.name}</h3>
+                        <span className="shrink-0 text-xs font-mono bg-surface px-2 py-0.5 rounded text-text-secondary">
                           #{order.id.slice(-6).toUpperCase()}
                         </span>
                       </div>
-                      <p className="text-xs text-text-secondary">{order.customer.phone} • {getOrderDate(order.createdAt).toLocaleTimeString()}</p>
+                      <p className="text-xs text-text-secondary truncate" title={order.customer.phone}>{order.customer.phone} • {getOrderDate(order.createdAt).toLocaleTimeString()}</p>
                     </div>
                     <StatusPill status={order.status} customText={order.status.replace(/_/g, ' ')} />
                   </div>
@@ -294,10 +294,10 @@ export default function AdminDashboard({ superAdminRestaurantId, onBack }) {
                   <img src={item.imageUrl} alt="" className="w-full h-full object-cover" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-bold text-text-primary truncate">{item.name}</h3>
+                  <h3 className="font-bold text-text-primary truncate" title={item.name}>{item.name}</h3>
                   <div className="flex gap-2 text-xs mt-1">
                     <span className="text-accent font-bold">₹{item.price}</span>
-                    <span className="text-text-secondary bg-surface px-2 rounded-full">{item.category}</span>
+                    <span className="text-text-secondary bg-surface px-2 rounded-full truncate" title={item.category}>{item.category}</span>
                   </div>
                 </div>
                 <div className="flex flex-col items-end gap-3 flex-shrink-0">

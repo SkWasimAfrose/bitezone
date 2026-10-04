@@ -90,8 +90,8 @@ export default function Profile() {
   };
 
   return (
-    <div className="pb-32 px-4 max-w-lg mx-auto animate-in fade-in min-h-screen">
-      <header className="sticky top-0 z-30 pt-6 pb-4 bg-background/80 backdrop-blur-md">
+    <div className="pb-32 px-4 max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto animate-in fade-in min-h-screen">
+      <header className="sticky top-0 md:top-[72px] z-30 pt-6 pb-4 bg-background/80 backdrop-blur-md">
         <h1 className="text-3xl font-bold font-serif text-text-primary tracking-tight px-1">Profile</h1>
       </header>
 

@@ -5,6 +5,8 @@ import ProtectedRoute from './components/ProtectedRoute'
 import PWAInstallPrompt from './components/PWAInstallPrompt'
 import { LayoutDashboard } from 'lucide-react'
 
+import TopNavBar from './components/ui/TopNavBar';
+
 // Lazy loaded routes
 const Home = lazy(() => import('./pages/Home'))
 const Login = lazy(() => import('./pages/Login'))
@@ -49,7 +51,7 @@ const AdminDashboardShortcut = () => {
   }
 
   return (
-    <div className="fixed top-6 right-4 z-[100] animate-in fade-in zoom-in duration-300">
+    <div className="md:hidden fixed top-6 right-4 z-[100] animate-in fade-in zoom-in duration-300">
       <button 
         onClick={() => navigate(user.role === 'superadmin' ? '/super-admin' : '/admin')}
         className="flex items-center gap-1.5 px-3 py-1.5 bg-accent/90 backdrop-blur-md text-white rounded-full text-xs font-bold shadow-lg shadow-accent/30 hover:bg-accent hover:scale-105 active:scale-95 transition-all"
@@ -70,7 +72,8 @@ function App() {
 
   return (
     <Router>
-      <div className="min-h-screen bg-background text-text-primary transition-colors duration-200 relative">
+      <div className="min-h-screen bg-background text-text-primary transition-colors duration-200 relative flex flex-col">
+        <TopNavBar />
         <AdminDashboardShortcut />
         <Suspense fallback={<LoadingScreen />}>
           <Routes>

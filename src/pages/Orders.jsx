@@ -61,8 +61,8 @@ export default function Orders() {
   ];
 
   return (
-    <div className="pb-32 px-4 max-w-lg mx-auto animate-in fade-in min-h-screen">
-      <header className="sticky top-0 z-30 pt-6 pb-4 bg-background/80 backdrop-blur-md">
+    <div className="pb-32 px-4 max-w-lg md:max-w-3xl lg:max-w-5xl xl:max-w-7xl mx-auto animate-in fade-in min-h-screen">
+      <header className="sticky top-0 md:top-[72px] z-30 pt-6 pb-4 bg-background/80 backdrop-blur-md">
         <h1 className="text-3xl font-bold font-serif text-text-primary tracking-tight px-1">Your Orders</h1>
         
         <div className="flex gap-4 mt-6 px-1">
@@ -83,7 +83,7 @@ export default function Orders() {
         </div>
       </header>
 
-      <div className="space-y-4 mt-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
         <AnimatePresence mode="popLayout">
           {displayOrders.map(order => (
             <motion.div
@@ -97,11 +97,11 @@ export default function Orders() {
                 className="p-5 cursor-pointer hover:shadow-xl active:scale-[0.98] transition-all"
                 onClick={() => setSelectedOrder(order)}
               >
-                <div className="flex justify-between items-start mb-3">
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <h3 className="font-bold text-text-primary text-lg">{order.restaurantName}</h3>
-                      <span className="text-xs font-mono bg-surface px-2 py-0.5 rounded text-text-secondary">
+                <div className="flex justify-between items-start mb-3 gap-3">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <h3 className="font-bold text-text-primary text-lg truncate" title={order.restaurantName}>{order.restaurantName}</h3>
+                      <span className="shrink-0 text-xs font-mono bg-surface px-2 py-0.5 rounded text-text-secondary">
                         #{order.id.slice(-6).toUpperCase()}
                       </span>
                     </div>
@@ -126,7 +126,7 @@ export default function Orders() {
             </motion.div>
           ))}
           {displayOrders.length === 0 && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-20 px-6">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-20 px-6 md:col-span-2 lg:col-span-3">
               <div className="w-20 h-20 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-6 text-accent shadow-inner">
                 <Package className="w-8 h-8" />
               </div>

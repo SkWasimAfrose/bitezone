@@ -67,13 +67,13 @@ export default function Home() {
   }
 
   return (
-    <div className="pb-32 px-4 max-w-lg mx-auto space-y-6 animate-in fade-in duration-500 pt-4">
+    <div className="pb-32 px-4 max-w-lg md:max-w-3xl lg:max-w-5xl xl:max-w-7xl mx-auto space-y-6 animate-in fade-in duration-500 pt-4">
       <style>{`
         .scrollbar-hide::-webkit-scrollbar { display: none; }
       `}</style>
       
       {/* Header with Search & Filters */}
-      <header className="sticky top-0 z-30 pt-6 pb-2 bg-background/95 backdrop-blur-xl -mx-4 px-4 space-y-5 shadow-sm border-b border-text-secondary/5">
+      <header className="sticky top-0 md:top-[72px] z-30 pt-6 pb-2 bg-background/95 backdrop-blur-xl -mx-4 px-4 space-y-5 shadow-sm border-b border-text-secondary/5">
         <div>
           <h1 className="text-3xl font-bold text-text-primary tracking-tight font-serif">Good evening</h1>
         </div>
@@ -111,7 +111,7 @@ export default function Home() {
       </header>
 
       {/* Restaurant Feed */}
-      <section className="space-y-5 px-1 mt-2">
+      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-1 mt-2">
         {filteredRestaurants.map((restaurant) => (
           <GlassCard 
             key={restaurant.id} 
@@ -139,7 +139,8 @@ export default function Home() {
             
             <div className="p-5">
               <h3 
-                className="text-xl font-bold font-serif text-text-primary mb-1 cursor-pointer hover:text-accent transition-colors"
+                className="text-xl font-bold font-serif text-text-primary mb-1 cursor-pointer hover:text-accent transition-colors truncate"
+                title={restaurant.name}
                 onClick={() => navigate(`/restaurant/${restaurant.id}`)}
               >
                 {restaurant.name}
@@ -170,7 +171,7 @@ export default function Home() {
           </GlassCard>
         ))}
         {approvedRestaurants.length === 0 ? (
-          <GlassCard className="p-8 text-center flex flex-col items-center justify-center space-y-4 my-8">
+          <GlassCard className="p-8 text-center flex flex-col items-center justify-center space-y-4 my-8 md:col-span-2 lg:col-span-3">
             <div className="w-16 h-16 bg-surface rounded-full flex items-center justify-center">
               <Store className="w-8 h-8 text-accent" />
             </div>
@@ -178,7 +179,7 @@ export default function Home() {
             <p className="text-sm text-text-secondary">Our food partners are still setting up their kitchens. Please check back a little later!</p>
           </GlassCard>
         ) : filteredRestaurants.length === 0 && (
-          <GlassCard className="p-8 text-center flex flex-col items-center justify-center space-y-4 my-8 border-dashed border-2 border-text-secondary/20 bg-surface/30">
+          <GlassCard className="p-8 text-center flex flex-col items-center justify-center space-y-4 my-8 border-dashed border-2 border-text-secondary/20 bg-surface/30 md:col-span-2 lg:col-span-3">
             <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center text-accent">
               <Utensils className="w-8 h-8" />
             </div>

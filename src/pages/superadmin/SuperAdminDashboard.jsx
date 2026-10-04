@@ -187,10 +187,10 @@ export default function SuperAdminDashboard() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {restaurants.map(r => (
               <GlassCard key={r.id} className="p-5 cursor-pointer hover:bg-surface/60 transition-colors" onClick={() => setSelectedRestaurantId(r.id)}>
-                <div className="flex justify-between items-start mb-4">
-                  <div>
-                    <h3 className="font-bold font-serif text-text-primary text-lg">{r.name}</h3>
-                    <p className="text-sm text-text-secondary">{r.ownerName || r.ownerEmail} • {r.phone}</p>
+                <div className="flex justify-between items-start mb-4 gap-3">
+                  <div className="min-w-0 flex-1">
+                    <h3 className="font-bold font-serif text-text-primary text-lg truncate" title={r.name}>{r.name}</h3>
+                    <p className="text-sm text-text-secondary truncate" title={`${r.ownerName || r.ownerEmail} • ${r.phone}`}>{r.ownerName || r.ownerEmail} • {r.phone}</p>
                   </div>
                   <StatusPill status={r.status === 'approved' ? 'open' : 'closed'} customText={r.status.toUpperCase()} />
                 </div>
@@ -260,26 +260,31 @@ export default function SuperAdminDashboard() {
               const restName = u.role === 'restaurant_admin' && u.restaurantId ? restaurants.find(r => r.id === u.restaurantId)?.name : null;
               
               return (
-                <GlassCard key={u.uid} className="p-4 flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <Avatar src={u.photoURL} size="md" />
-                    <div className="min-w-0 pr-2">
-                      <h3 className="font-bold font-serif text-text-primary truncate">{u.displayName || 'Guest'}</h3>
-                      <p className="text-xs text-text-secondary truncate">{u.email}</p>
-                      <div className="flex items-center gap-2 mt-1">
-                        <span className="text-[10px] font-bold tracking-widest uppercase bg-accent/10 text-accent px-2 py-0.5 rounded border border-accent/20">
-                          {u.role === 'superadmin' ? 'Super Admin' : u.role === 'restaurant_admin' ? 'Rest. Admin' : 'Student'}
-                        </span>
-                        {restName && <span className="text-[10px] font-medium text-text-secondary truncate max-w-[120px]">@ {restName}</span>}
-                      </div>
+                <GlassCard key={u.uid} className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <Avatar src={u.photoURL} size="md" className="shrink-0" />
+                    <div className="min-w-0 flex-1">
+                      <h3 className="font-bold font-serif text-text-primary truncate" title={u.displayName || 'Guest'}>{u.displayName || 'Guest'}</h3>
+                      <p className="text-xs text-text-secondary truncate" title={u.email}>{u.email}</p>
                     </div>
                   </div>
-                  <div className="flex-shrink-0">
+                  
+                  <div className="flex items-center justify-between sm:justify-end gap-3 min-w-0 sm:shrink-0">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className="shrink-0 text-[10px] font-bold tracking-widest uppercase bg-accent/10 text-accent px-2 py-0.5 rounded border border-accent/20 whitespace-nowrap">
+                        {u.role === 'superadmin' ? 'Super Admin' : u.role === 'restaurant_admin' ? 'Rest. Admin' : 'Student'}
+                      </span>
+                      {restName && (
+                        <span className="truncate max-w-[120px] sm:max-w-[200px] text-[10px] font-medium text-text-secondary bg-surface border border-text-secondary/10 px-2 py-0.5 rounded whitespace-nowrap" title={restName}>
+                          @ {restName}
+                        </span>
+                      )}
+                    </div>
                     <GlassButton 
                       onClick={() => handleEditRole(u)}
                       disabled={isSelf}
                       title={isSelf ? "You can't change your own role here" : "Edit Role"}
-                      className="px-3 py-1.5 text-xs font-bold"
+                      className="shrink-0 px-3 py-1.5 text-xs font-bold whitespace-nowrap"
                     >
                       Edit Role
                     </GlassButton>
@@ -294,10 +299,10 @@ export default function SuperAdminDashboard() {
       {activeTab === 'orders' && (
         <div className="space-y-4">
            {orders.map(order => (
-             <GlassCard key={order.id} className="p-4 text-sm flex justify-between items-center">
-               <div>
-                 <p className="font-bold text-text-primary">{order.restaurantName}</p>
-                 <p className="text-xs text-text-secondary">By: {order.customer.name}</p>
+             <GlassCard key={order.id} className="p-4 text-sm flex justify-between items-start gap-3">
+               <div className="min-w-0 flex-1">
+                 <p className="font-bold text-text-primary truncate" title={order.restaurantName}>{order.restaurantName}</p>
+                 <p className="text-xs text-text-secondary truncate" title={order.customer.name}>By: {order.customer.name}</p>
                  <p className="text-xs font-mono mt-1 text-text-secondary">#{order.id.slice(-6).toUpperCase()}</p>
                  <p className="text-accent font-medium mt-1">₹{order.total}</p>
                </div>

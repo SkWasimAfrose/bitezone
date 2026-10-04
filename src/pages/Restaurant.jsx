@@ -71,7 +71,7 @@ export default function Restaurant() {
   }
 
   return (
-    <div className="pb-32 max-w-lg mx-auto animate-in fade-in duration-500 bg-background min-h-screen">
+    <div className="pb-32 max-w-lg md:max-w-3xl lg:max-w-5xl xl:max-w-7xl mx-auto animate-in fade-in duration-500 bg-background min-h-screen">
       {/* Header Image & Back Button */}
       <div className="relative h-64 w-full">
         <img 
@@ -136,7 +136,7 @@ export default function Restaurant() {
           </div>
 
           {/* Menu Items */}
-          <div className="space-y-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {filteredMenu.map(item => {
               const available = restaurant.isOpen && isAvailableNow(item.startTime, item.endTime) && (item.inStock !== false);
               const cartItem = cart.items.find(i => i.itemId === item.id);
@@ -149,7 +149,7 @@ export default function Restaurant() {
                   </div>
                   
                   <div className="flex-1 min-w-0">
-                    <h3 className={`font-bold leading-tight truncate ${available ? 'text-text-primary' : 'text-text-secondary'}`}>{item.name}</h3>
+                    <h3 className={`font-bold leading-tight truncate ${available ? 'text-text-primary' : 'text-text-secondary'}`} title={item.name}>{item.name}</h3>
                     <div className="flex gap-2 text-xs mt-1">
                       <span className={`font-bold ${available ? 'text-accent' : 'text-text-secondary'}`}>₹{item.price}</span>
                     </div>
@@ -192,7 +192,7 @@ export default function Restaurant() {
 
       {/* Location Section */}
       {currentTab === 'details' && (
-        <div className="px-4 mt-6 space-y-6 animate-in fade-in">
+        <div className="px-4 mt-6 animate-in fade-in grid grid-cols-1 md:grid-cols-2 gap-6">
           <GlassCard className="p-5 space-y-4">
             <div>
               <p className="text-xs font-bold text-text-secondary uppercase tracking-widest">Restaurant Name</p>
@@ -242,12 +242,12 @@ export default function Restaurant() {
           </GlassCard>
 
           {mapUrl && (
-            <div>
+            <div className="h-full flex items-start">
               <a 
                 href={mapUrl} 
                 target="_blank" 
                 rel="noreferrer"
-                className="flex items-center justify-center gap-2 w-full py-4 bg-surface/80 border border-text-secondary/20 rounded-2xl text-text-primary font-bold hover:bg-surface-hover transition-colors shadow-sm mt-2"
+                className="flex items-center justify-center gap-2 w-full py-4 bg-surface/80 border border-text-secondary/20 rounded-2xl text-text-primary font-bold hover:bg-surface-hover transition-colors shadow-sm mt-0 md:mt-0 h-auto md:h-full min-h-[200px]"
               >
                 <Map className="w-5 h-5 text-[#4C7A5E]" />
                 View on Google Maps
@@ -288,7 +288,7 @@ export default function Restaurant() {
           {cart.items.map(item => (
             <GlassCard key={item.itemId} className="p-4 flex items-center justify-between gap-4">
               <div className="flex-1 min-w-0 pr-4">
-                <h3 className="font-bold text-text-primary truncate">{item.name}</h3>
+                <h3 className="font-bold text-text-primary truncate" title={item.name}>{item.name}</h3>
                 <p className="text-accent font-semibold mt-1">₹{item.price}</p>
               </div>
               

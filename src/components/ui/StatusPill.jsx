@@ -20,7 +20,7 @@ export default function StatusPill({ status, customText }) {
   const displayText = customText || status;
 
   return (
-    <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider ${colorClass}`}>
+    <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider shrink-0 whitespace-nowrap ${colorClass}`}>
       {dotColor && (
         <span className="relative flex h-2 w-2">
           <span className={`animate-ping absolute inline-flex h-full w-full rounded-full ${dotColor} opacity-75`}></span>
