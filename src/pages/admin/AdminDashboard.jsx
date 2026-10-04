@@ -63,7 +63,7 @@ export default function AdminDashboard({ superAdminRestaurantId, onBack }) {
   const restaurantOrders = orders.filter(o => o.restaurantId === effectiveRestaurantId);
 
   const filteredOrders = restaurantOrders.filter(o => {
-    if (orderFilter === 'All') return true;
+    if (orderFilter === 'All') return !['delivered', 'cancelled'].includes(o.status);
     return o.status === orderFilter.toLowerCase().replace(/ /g, '_');
   });
 
@@ -257,7 +257,13 @@ export default function AdminDashboard({ superAdminRestaurantId, onBack }) {
             </div>
 
             <AnimatePresence>
-              {filteredOrders.map(order => (
+              {filteredOrders.length === 0 ? (
+                <GlassCard className="p-8 text-center text-text-secondary">
+                  <Package className="w-8 h-8 mx-auto mb-2 text-text-secondary/50" />
+                  <p className="text-sm font-medium">No {orderFilter === 'All' ? 'active' : orderFilter.toLowerCase()} orders found.</p>
+                </GlassCard>
+              ) : (
+                filteredOrders.map(order => (
                 <motion.div
                   key={order.id}
                   layout
@@ -325,7 +331,7 @@ export default function AdminDashboard({ superAdminRestaurantId, onBack }) {
                     </div>
                   </GlassCard>
                 </motion.div>
-              ))}
+              )))}
             </AnimatePresence>
           </div>
         )}
