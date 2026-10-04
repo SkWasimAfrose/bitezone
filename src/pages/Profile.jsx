@@ -90,12 +90,14 @@ export default function Profile() {
   };
 
   return (
-    <div className="pb-32 px-4 max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto animate-in fade-in min-h-screen">
-      <header className="sticky top-0 md:top-[72px] z-30 pt-6 pb-4 bg-background/80 backdrop-blur-md">
-        <h1 className="text-3xl font-bold font-serif text-text-primary tracking-tight px-1">Profile</h1>
+    <div className="min-h-screen bg-background pb-24 sm:pb-10 animate-in fade-in">
+      <header className="sticky top-0 sm:top-[64px] z-30 bg-background/90 backdrop-blur-md border-b border-text-secondary/5">
+        <div className="page-container py-4">
+          <h1 className="font-bold font-serif text-text-primary tracking-tight" style={{ fontSize: 'clamp(1.5rem, 5vw, 2.25rem)' }}>Profile</h1>
+        </div>
       </header>
 
-      <div className="space-y-6 mt-4">
+      <div className="page-container space-y-5 pt-5">
         {/* User Card */}
         <GlassCard className="p-6 flex items-center gap-5 relative overflow-hidden">
           <div className="absolute top-0 right-0 p-3">
@@ -315,3 +317,4 @@ export default function Profile() {
     </div>
   );
 }
+
