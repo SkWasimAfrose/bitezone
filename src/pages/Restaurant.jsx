@@ -102,7 +102,7 @@ export default function Restaurant() {
             This restaurant is currently closed.
           </div>
         )}
-        <div className="flex gap-4 border-b border-text-secondary/10 pb-2">
+        <div className="flex gap-4 border-b border-text-secondary/10 pb-2 overflow-x-auto scrollbar-hide">
           {['Menu', 'Details'].map(tab => (
             <button 
               key={tab}

@@ -131,7 +131,7 @@ export default function SuperAdminDashboard() {
       </header>
 
       {/* Tabs */}
-      <div className="flex gap-4 border-b border-text-secondary/10 pb-2">
+      <div className="flex gap-4 border-b border-text-secondary/10 pb-2 overflow-x-auto scrollbar-hide">
         {['Overview', 'Restaurants', 'Users', 'Orders'].map(tab => (
           <button 
             key={tab}
@@ -148,28 +148,28 @@ export default function SuperAdminDashboard() {
         <div className="space-y-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <GlassCard 
-              className="p-5 flex flex-col justify-center items-center text-center cursor-pointer hover:bg-surface-hover transition-colors"
+              className="p-5 flex flex-col justify-center items-center text-center cursor-pointer hover:bg-surface-hover transition-colors min-w-0"
               onClick={() => setActiveTab('restaurants')}
             >
-              <Store className="w-8 h-8 text-accent mb-3" />
-              <p className="text-xs text-text-secondary uppercase tracking-widest font-bold">Restaurants</p>
+              <Store className="w-8 h-8 text-accent mb-3 shrink-0" />
+              <p className="text-[10px] sm:text-xs text-text-secondary uppercase tracking-widest font-bold truncate w-full" title="Restaurants">Restaurants</p>
               <p className="text-3xl font-bold font-serif text-text-primary mt-1">{restaurants.length}</p>
-              <p className="text-xs text-[#4C7A5E] font-medium mt-1">{openCount} currently open</p>
+              <p className="text-xs text-[#4C7A5E] font-medium mt-1 truncate w-full">{openCount} currently open</p>
             </GlassCard>
             <GlassCard 
-              className="p-5 flex flex-col justify-center items-center text-center cursor-pointer hover:bg-surface-hover transition-colors"
+              className="p-5 flex flex-col justify-center items-center text-center cursor-pointer hover:bg-surface-hover transition-colors min-w-0"
               onClick={() => setActiveTab('orders')}
             >
-              <Receipt className="w-8 h-8 text-[#5B88A5] mb-3" />
-              <p className="text-xs text-text-secondary uppercase tracking-widest font-bold">Today Orders</p>
+              <Receipt className="w-8 h-8 text-[#5B88A5] mb-3 shrink-0" />
+              <p className="text-[10px] sm:text-xs text-text-secondary uppercase tracking-widest font-bold truncate w-full" title="Today Orders">Today Orders</p>
               <p className="text-3xl font-bold font-serif text-text-primary mt-1">{todayOrders.length}</p>
             </GlassCard>
             <GlassCard 
-              className="p-5 flex flex-col justify-center items-center text-center cursor-pointer hover:bg-surface-hover transition-colors"
+              className="p-5 flex flex-col justify-center items-center text-center cursor-pointer hover:bg-surface-hover transition-colors min-w-0"
               onClick={() => setActiveTab('orders')}
             >
-              <Receipt className="w-8 h-8 text-accent mb-3" />
-              <p className="text-xs text-text-secondary uppercase tracking-widest font-bold">All-time Orders</p>
+              <Receipt className="w-8 h-8 text-accent mb-3 shrink-0" />
+              <p className="text-[10px] sm:text-xs text-text-secondary uppercase tracking-widest font-bold truncate w-full" title="All-time Orders">All-time Orders</p>
               <p className="text-3xl font-bold font-serif text-text-primary mt-1">{orders.length}</p>
             </GlassCard>
           </div>

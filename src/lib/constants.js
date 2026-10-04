@@ -1,0 +1,1 @@
+export const CANCELLATION_WINDOW_MINUTES = 5;

@@ -89,7 +89,7 @@ export default function Home() {
         </div>
 
         {/* Filter Chips (Horizontally scrollable) */}
-        <div className="flex gap-3 overflow-x-auto pb-4 pt-1 -mx-4 px-4 scrollbar-hide" style={{ scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
+        <div className="flex gap-3 overflow-x-auto pb-4 pt-1 scrollbar-hide" style={{ scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
           {CUISINES.map((cuisine) => (
             <button
               key={cuisine}

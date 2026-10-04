@@ -144,7 +144,9 @@ export default function AdminDashboard({ superAdminRestaurantId, onBack }) {
     return createdAt.toDate ? createdAt.toDate() : new Date(createdAt);
   };
 
-  const todayOrders = restaurantOrders.filter(o => getOrderDate(o.createdAt).toDateString() === new Date().toDateString());
+  const todayOrders = restaurantOrders.filter(o => 
+    getOrderDate(o.createdAt).toDateString() === new Date().toDateString() && o.status !== 'cancelled'
+  );
   const revenue = todayOrders.filter(o => o.status === 'delivered').reduce((sum, o) => sum + o.total, 0);
   const pendingCount = restaurantOrders.filter(o => ['new', 'preparing'].includes(o.status)).length;
   const outOfStockCount = restaurant.menu.filter(m => !m.inStock).length;
@@ -166,7 +168,7 @@ export default function AdminDashboard({ superAdminRestaurantId, onBack }) {
           <p className="text-text-secondary mt-1 max-w-sm">Manage your orders, menu, and restaurant settings.</p>
         </div>
 
-        <div className="flex flex-col items-center p-4 bg-surface/50 rounded-3xl border border-text-secondary/10 min-w-[200px]">
+        <div className="flex flex-col items-center p-4 bg-surface/50 rounded-3xl border border-text-secondary/10 w-full md:w-auto md:min-w-[200px]">
           <span className="font-bold text-text-primary mb-3">
             {restaurant.isOpen ? 'Accepting Orders' : 'Currently Closed'}
           </span>
@@ -181,30 +183,30 @@ export default function AdminDashboard({ superAdminRestaurantId, onBack }) {
 
       {/* Stats Row */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <GlassCard className="p-4 flex flex-col justify-center items-center text-center">
-          <Package className="w-6 h-6 text-accent mb-2" />
-          <p className="text-xs text-text-secondary uppercase tracking-widest font-bold">Today's Orders</p>
+        <GlassCard className="p-4 flex flex-col justify-center items-center text-center min-w-0">
+          <Package className="w-6 h-6 text-accent mb-2 shrink-0" />
+          <p className="text-[10px] sm:text-xs text-text-secondary uppercase tracking-widest font-bold truncate w-full" title="Today's Orders">Today's Orders</p>
           <p className="text-2xl font-bold font-serif text-text-primary mt-1">{todayOrders.length}</p>
         </GlassCard>
-        <GlassCard className="p-4 flex flex-col justify-center items-center text-center">
-          <Clock className="w-6 h-6 text-[#5B88A5] mb-2" />
-          <p className="text-xs text-text-secondary uppercase tracking-widest font-bold">Pending</p>
+        <GlassCard className="p-4 flex flex-col justify-center items-center text-center min-w-0">
+          <Clock className="w-6 h-6 text-[#5B88A5] mb-2 shrink-0" />
+          <p className="text-[10px] sm:text-xs text-text-secondary uppercase tracking-widest font-bold truncate w-full" title="Pending">Pending</p>
           <p className="text-2xl font-bold font-serif text-text-primary mt-1">{pendingCount}</p>
         </GlassCard>
-        <GlassCard className="p-4 flex flex-col justify-center items-center text-center">
-          <TrendingUp className="w-6 h-6 text-[#4C7A5E] mb-2" />
-          <p className="text-xs text-text-secondary uppercase tracking-widest font-bold">Revenue</p>
+        <GlassCard className="p-4 flex flex-col justify-center items-center text-center min-w-0">
+          <TrendingUp className="w-6 h-6 text-[#4C7A5E] mb-2 shrink-0" />
+          <p className="text-[10px] sm:text-xs text-text-secondary uppercase tracking-widest font-bold truncate w-full" title="Revenue">Revenue</p>
           <p className="text-2xl font-bold font-serif text-text-primary mt-1">₹{revenue}</p>
         </GlassCard>
-        <GlassCard className="p-4 flex flex-col justify-center items-center text-center">
-          <AlertCircle className="w-6 h-6 text-[#A34A3A] mb-2" />
-          <p className="text-xs text-text-secondary uppercase tracking-widest font-bold">Out of stock</p>
+        <GlassCard className="p-4 flex flex-col justify-center items-center text-center min-w-0">
+          <AlertCircle className="w-6 h-6 text-[#A34A3A] mb-2 shrink-0" />
+          <p className="text-[10px] sm:text-xs text-text-secondary uppercase tracking-widest font-bold truncate w-full" title="Out of stock">Out of stock</p>
           <p className="text-2xl font-bold font-serif text-text-primary mt-1">{outOfStockCount}</p>
         </GlassCard>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-4 border-b border-text-secondary/10 pb-2">
+      <div className="flex gap-4 border-b border-text-secondary/10 pb-2 overflow-x-auto scrollbar-hide">
         {['Orders', 'Menu', 'Settings'].map(tab => (
           <button 
             key={tab}
@@ -261,8 +263,8 @@ export default function AdminDashboard({ superAdminRestaurantId, onBack }) {
                   )}
 
                   <div className="flex gap-3">
-                    {order.status === 'new' && (
-                      <GlassButton className="text-red-500 border-red-500/20 px-4" onClick={() => cancelOrder(order.id)}>Reject</GlassButton>
+                    {['new', 'preparing', 'out_for_delivery'].includes(order.status) && (
+                      <GlassButton className="text-red-500 border-red-500/20 px-4" onClick={() => cancelOrder(order.id)}>Cancel</GlassButton>
                     )}
                     {['new', 'preparing', 'out_for_delivery'].includes(order.status) && (
                       <GlassButton variant="primary" className="flex-1" onClick={() => advanceOrderStatus(order)}>

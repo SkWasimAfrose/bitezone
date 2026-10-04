@@ -46,6 +46,7 @@ service cloud.firestore {
             && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status','updatedAt']))
         || (resource.data.customer.uid == request.auth.uid
             && resource.data.status == 'new'
+            && request.time < resource.data.createdAt + duration.value(5, 'm')
             && request.resource.data.status == 'cancelled'
             && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status','updatedAt'])));
       allow delete: if false;

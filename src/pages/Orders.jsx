@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useOrders } from '../lib/OrdersContext';
 import { useCart } from '../lib/CartContext';
+import { useRestaurants } from '../lib/RestaurantsContext';
+import { CANCELLATION_WINDOW_MINUTES } from '../lib/constants';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Clock, MapPin, Package, CheckCircle, ChevronRight, XCircle } from 'lucide-react';
@@ -13,10 +15,17 @@ import StatusPill from '../components/ui/StatusPill';
 export default function Orders() {
   const { orders, updateOrderStatus } = useOrders();
   const { addItem, clearCart, cart } = useCart();
+  const { restaurants } = useRestaurants();
   const navigate = useNavigate();
   
   const [activeTab, setActiveTab] = useState('active');
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const [now, setNow] = useState(Date.now());
+
+  useEffect(() => {
+    const timer = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   const activeOrders = orders.filter(o => ['new', 'preparing', 'out_for_delivery'].includes(o.status));
   const pastOrders = orders.filter(o => ['delivered', 'cancelled'].includes(o.status));
@@ -94,7 +103,7 @@ export default function Orders() {
               transition={{ duration: 0.2 }}
             >
               <GlassCard 
-                className="p-5 cursor-pointer hover:shadow-xl active:scale-[0.98] transition-all"
+                className={`p-5 cursor-pointer hover:shadow-xl active:scale-[0.98] transition-all ${order.status === 'cancelled' ? 'opacity-60 grayscale-[0.5]' : ''}`}
                 onClick={() => setSelectedOrder(order)}
               >
                 <div className="flex justify-between items-start mb-3 gap-3">
@@ -185,10 +194,42 @@ export default function Orders() {
             </div>
 
             <div className="flex gap-3 pt-4">
-              {selectedOrder.status === 'new' && (
-                <GlassButton className="flex-1 py-3 text-red-500" onClick={() => handleCancel(selectedOrder.id)}>
-                  Cancel Order
-                </GlassButton>
+              {['new', 'preparing'].includes(selectedOrder.status) && (
+                (() => {
+                   const orderTime = getOrderDate(selectedOrder.createdAt).getTime();
+                   const expiryTime = orderTime + CANCELLATION_WINDOW_MINUTES * 60 * 1000;
+                   const timeRemaining = expiryTime - now;
+                   const canCancel = selectedOrder.status === 'new' && timeRemaining > 0;
+                   
+                   if (canCancel) {
+                     const mins = Math.floor(timeRemaining / 60000);
+                     const secs = Math.floor((timeRemaining % 60000) / 1000);
+                     return (
+                       <div className="flex-1 flex flex-col">
+                         <GlassButton className="w-full py-3 text-red-500 border-red-500/20" onClick={() => handleCancel(selectedOrder.id)}>
+                           Cancel Order
+                         </GlassButton>
+                         <span className="text-[10px] text-text-secondary mt-1 font-medium text-center">
+                           You can cancel for the next {mins}:{secs.toString().padStart(2, '0')}
+                         </span>
+                       </div>
+                     );
+                   } else {
+                     const rest = restaurants.find(r => r.id === selectedOrder.restaurantId);
+                     return (
+                       <div className="flex-1 flex flex-col">
+                         <a href={`tel:${rest?.phone || ''}`} className="w-full">
+                           <GlassButton className="w-full py-3">
+                             Call {selectedOrder.restaurantName} to Cancel
+                           </GlassButton>
+                         </a>
+                         <span className="text-[10px] text-text-secondary mt-1 font-medium text-center leading-tight">
+                           This order is already being prepared — please call the restaurant directly to cancel.
+                         </span>
+                       </div>
+                     );
+                   }
+                })()
               )}
               <GlassButton variant="primary" className="flex-1 py-3" onClick={() => handleReorder(selectedOrder)}>
                 Reorder
